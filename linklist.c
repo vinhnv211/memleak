@@ -1,0 +1,202 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node
+{
+    int data;
+    struct Node *next;
+} Node;
+
+typedef struct list
+{
+    Node *head;
+} list;
+
+#define LOG printf
+
+list *ll_create_List(void)
+{
+    list *newList = (list *)malloc(sizeof(list));
+
+    if (newList != NULL)
+    {
+        newList->head = NULL;
+        return newList;
+    }
+    else
+    {
+        printf("Khoi tao danh sach that bai");
+        return 0;
+    }
+}
+
+Node *ll_create_Node(int entry)
+{
+    Node *newNode = (Node *)malloc(sizeof(Node));
+
+    if (newNode != NULL)
+    {
+        newNode->data = entry;
+        newNode->next = NULL;
+        return newNode;
+    }
+    else
+    {
+        printf("Khoi tao Node that bai");
+        return 0;
+    }
+}
+
+void ll_add_last_Node(list *List, Node *entry)
+{
+
+    if (List->head == NULL)
+    {
+        List->head = entry;
+    }
+    else
+    {
+        Node *tmp = List->head;
+        while (tmp->next != NULL)
+        {
+            tmp = tmp->next;
+        }
+        tmp->next = entry;
+    }
+}
+void ll_print_all_node(list *List)
+{
+    Node *tmp = List->head;
+    while (tmp->next != NULL)
+    {
+        printf("%d ", tmp->data);
+        tmp = tmp->next;
+    }
+    printf("\n");
+}
+void ll_add_first_Node(list *List, Node *entry)
+{
+    if (List->head == NULL)
+    {
+        List->head = entry;
+    }
+    else
+    {
+
+        entry->next = List->head;
+        List->head = entry;
+    }
+}
+void ll_find_node(list *List, Node *entry)
+{
+    int index = 0, tim = 0;
+    Node *tmp = List->head;
+    while (tmp->next != NULL)
+    {
+        if (tmp->data == entry->data)
+        {
+            tim = 1;
+            printf("Node can tim o vi tri: %d\n", index);
+        }
+        tmp = tmp->next;
+        index++;
+    }
+    if (tim == 0)
+    {
+        printf("Khong tim thay Node \n");
+    }
+}
+
+int ll_delete_entry(list *List, Node *entry)
+{
+    int i = 0;
+    Node *previous = NULL;
+    Node *current = NULL;
+    Node *next = NULL;
+    int ret = 0;
+
+    if (NULL == entry)
+    {
+        printf("%s, Invalid argument!!! \n", __func__);
+        return 0;
+    }
+
+    current = List->head;
+    previous = NULL;
+
+    while (current != NULL)
+    {
+        i++;
+
+        if (current->data == entry->data)
+        {
+            next = current->next;
+
+            if (previous != NULL)
+            {
+                previous->next = next;
+            }
+
+            // Found
+            ret = 1;
+            current->next = NULL;
+            free(current);
+            break;
+        }
+
+        previous = current;
+        current = current->next;
+    }
+
+    if (ret == 1)
+    {
+        printf("%s, found = %d, entry=%d\n", __func__, ret, i);
+    }
+    else
+    {
+        printf("%s, No found entry to delete!!! \n", __func__);
+    }
+
+    return ret;
+}
+
+void ll_insert_Node(list *List, Node *entry, int ll_index)
+{
+    int index = 0, tim = 0;
+    Node *tmp = List->head;
+    while (tmp->next != NULL)
+    {
+        if (ll_index == index + 1)
+        {
+            tim = 1;
+            Node *tmp1 = tmp;
+            entry->next = tmp1->next;
+            tmp->next = entry;
+            printf("Chen thanh cong o vi tri %d \n", ll_index);
+        }
+        tmp = tmp->next;
+
+        index++;
+    }
+    if (tim == 0)
+    {
+        printf("Khong chen duoc \n");
+    }
+}
+int main()
+{
+    list *begin = ll_create_List();
+    Node *k1 = ll_create_Node(3);
+    for (int i = 0; i < 20; i++)
+    {
+        Node *entry = ll_create_Node(i);
+        ll_add_first_Node(begin, entry);
+    }
+    ll_find_node(begin, k1);
+    ll_print_all_node(begin);
+    ll_insert_Node(begin, k1, 3);
+    ll_print_all_node(begin);
+    ll_delete_entry(begin, k1);
+    ll_print_all_node(begin);
+    return 0;
+}
