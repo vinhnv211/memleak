@@ -25,7 +25,7 @@ list *ll_create_List(void)
     }
     else
     {
-        printf("Khoi tao danh sach that bai");
+        LOG("initialization failed list");
         return 0;
     }
 }
@@ -42,7 +42,7 @@ Node *ll_create_Node(int entry)
     }
     else
     {
-        printf("Khoi tao Node that bai");
+        LOG("initialization failed entry");
         return 0;
     }
 }
@@ -66,13 +66,17 @@ void ll_add_last_Node(list *List, Node *entry)
 }
 void ll_print_all_node(list *List)
 {
+    if (NULL == List->head)
+    {
+        LOG("Emtry list !\n");
+    }
     Node *tmp = List->head;
     while (tmp->next != NULL)
     {
-        printf("%d ", tmp->data);
+        LOG("%d ", tmp->data);
         tmp = tmp->next;
     }
-    printf("\n");
+    LOG("\n");
 }
 void ll_add_first_Node(list *List, Node *entry)
 {
@@ -89,21 +93,25 @@ void ll_add_first_Node(list *List, Node *entry)
 }
 void ll_find_node(list *List, Node *entry)
 {
-    int index = 0, tim = 0;
+    int index = 0, checkFindEntry = 0;
     Node *tmp = List->head;
+    if (NULL == entry)
+    {
+        LOG("%s, Invalid argument!!! \n", __func__);
+    }
     while (tmp->next != NULL)
     {
         if (tmp->data == entry->data)
         {
-            tim = 1;
-            printf("Node can tim o vi tri: %d\n", index);
+            checkFindEntry = 1;
+            LOG("Entry found location %d index in List\n", index);
         }
         tmp = tmp->next;
         index++;
     }
-    if (tim == 0)
+    if (checkFindEntry == 0)
     {
-        printf("Khong tim thay Node \n");
+        LOG("No found entry to find exists \n");
     }
 }
 
@@ -117,7 +125,7 @@ int ll_delete_entry(list *List, Node *entry)
 
     if (NULL == entry)
     {
-        printf("%s, Invalid argument!!! \n", __func__);
+        LOG("%s, Invalid argument!!! \n", __func__);
         return 0;
     }
 
@@ -150,11 +158,11 @@ int ll_delete_entry(list *List, Node *entry)
 
     if (ret == 1)
     {
-        printf("%s, found = %d, entry=%d\n", __func__, ret, i);
+        LOG("%s, found = %d, entry=%d\n", __func__, ret, i);
     }
     else
     {
-        printf("%s, No found entry to delete!!! \n", __func__);
+        LOG("%s, No found entry to delete!!! \n", __func__);
     }
 
     return ret;
@@ -162,41 +170,45 @@ int ll_delete_entry(list *List, Node *entry)
 
 void ll_insert_Node(list *List, Node *entry, int ll_index)
 {
-    int index = 0, tim = 0;
+    int index = 0, checkFindEntry = 0;
     Node *tmp = List->head;
+    if (NULL == entry)
+    {
+        LOG("%s, Invalid argument!!! \n", __func__);
+    }
     while (tmp->next != NULL)
     {
         if (ll_index == index + 1)
         {
-            tim = 1;
+            checkFindEntry = 1;
             Node *tmp1 = tmp;
             entry->next = tmp1->next;
             tmp->next = entry;
-            printf("Chen thanh cong o vi tri %d \n", ll_index);
+            LOG("Insert entry location %d in list\n", ll_index);
         }
         tmp = tmp->next;
 
         index++;
     }
-    if (tim == 0)
+    if (checkFindEntry == 0)
     {
-        printf("Khong chen duoc \n");
+        LOG("Insert entry failed \n");
     }
 }
-int main()
+void ll_delete_all_node(list *List)
 {
-    list *begin = ll_create_List();
-    Node *k1 = ll_create_Node(3);
-    for (int i = 0; i < 20; i++)
+    Node *current = NULL;
+    Node *previous = NULL;
+    // Node *next = NULL;
+    current = List->head;
+    while (current->next != NULL)
     {
-        Node *entry = ll_create_Node(i);
-        ll_add_first_Node(begin, entry);
+        previous = current;
+        
+        current = current->next;
+        previous->next=NULL;
+        free(previous);
     }
-    ll_find_node(begin, k1);
-    ll_print_all_node(begin);
-    ll_insert_Node(begin, k1, 3);
-    ll_print_all_node(begin);
-    ll_delete_entry(begin, k1);
-    ll_print_all_node(begin);
-    return 0;
+
+    LOG("Delete all entry \n");
 }
