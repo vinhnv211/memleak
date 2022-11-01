@@ -66,7 +66,7 @@ void ll_add_last_Node(list *List, Node *entry)
 }
 void ll_print_all_node(list *List)
 {
-    if (NULL == List->head)
+    if (NULL == List->head->next)
     {
         LOG("Emtry list !\n");
     }
@@ -204,11 +204,11 @@ void ll_delete_all_node(list *List)
     while (current->next != NULL)
     {
         previous = current;
-        
+
         current = current->next;
-        previous->next=NULL;
+        previous->next = NULL;
         free(previous);
     }
-
+    free(current);
     LOG("Delete all entry \n");
 }
